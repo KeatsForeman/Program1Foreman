@@ -2,11 +2,10 @@
 #include <iostream>
 #include <allegro5/allegro.h>
 #include "Logic.h"
+#include <fstream>
 
 
 using namespace std;
-
-
 
 bool finished = false;
 bool timeOut = false;
@@ -15,12 +14,12 @@ void* input(ALLEGRO_THREAD* ptr, void* arg);
 void* timer(ALLEGRO_THREAD* ptr, void* arg);
 
 // Creates two threads and joins them so they run at the same time
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
 
 	Logic game;
 
 	game.introduction();
+	game.createLists();
 
 	ALLEGRO_THREAD* create1 = NULL, * create2 = NULL; //used for return value from thread creation
 
@@ -54,10 +53,41 @@ int main(int argc, char* argv[])
 	return 0;
 }
 
-Logic::Logic() {}
+//constructor
+Logic::Logic() {
+	numCorrect = 0;
+	smallWordLength = 0;
+	mediumWordLength = 0;
+	largeWordLength = 0;
+}
 
+//prints out game instructions
 void Logic::introduction() {
 	printf("GUess these darn words please\n");
+}
+
+//reads in file and puts into lists
+bool Logic::createLists() {
+	std::string word;
+	
+	std::ifstream file("dictionary.txt");
+
+	if (!file) {
+		return false;
+	}
+
+	while (file >> word) {
+		if (word.length() <= 5) {
+			smallWords->append(word);
+		}
+		if (word.length() == 6 || word.length() == 7) {
+			mediumWords->append(word);
+		}
+		if (word.length() >= 8) {
+			largeWords->append(word);
+		}
+	}
+	return true;
 }
 
 // A pointer to a function that prompts the user for input
