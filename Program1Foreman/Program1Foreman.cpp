@@ -81,12 +81,15 @@ bool Logic::createLists() {
 	while (file >> word) {
 		if (word.length() == 4 || word.length() == 5) {
 			smallWords->append(word);
+			smallWordLength += 1;
 		}
 		if (word.length() == 6 || word.length() == 7) {
 			mediumWords->append(word);
+			mediumWordLength += 1;
 		}
 		if (word.length() >= 8) {
 			largeWords->append(word);
+			largeWordLength += 1;
 		}
 	}
 	return true;
