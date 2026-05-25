@@ -1,9 +1,11 @@
 #include <cstdlib>
 #include <iostream>
 #include <allegro5/allegro.h>
+#include "Logic.h"
 
 
 using namespace std;
+
 
 
 bool finished = false;
@@ -15,6 +17,11 @@ void* timer(ALLEGRO_THREAD* ptr, void* arg);
 // Creates two threads and joins them so they run at the same time
 int main(int argc, char* argv[])
 {
+
+	Logic game;
+
+	game.introduction();
+
 	ALLEGRO_THREAD* create1 = NULL, * create2 = NULL; //used for return value from thread creation
 
 	create1 = al_create_thread(input, NULL);
@@ -45,6 +52,12 @@ int main(int argc, char* argv[])
 		cout << "\n\tTime ran out and that ended the program1\n";
 	system("pause");
 	return 0;
+}
+
+Logic::Logic() {}
+
+void Logic::introduction() {
+	printf("GUess these darn words please\n");
 }
 
 // A pointer to a function that prompts the user for input
