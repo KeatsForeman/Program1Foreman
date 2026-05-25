@@ -3,6 +3,8 @@
 #include <allegro5/allegro.h>
 #include "Logic.h"
 #include <fstream>
+#include <algorithm>
+#include <random>
 
 
 using namespace std;
@@ -77,7 +79,7 @@ bool Logic::createLists() {
 	}
 
 	while (file >> word) {
-		if (word.length() <= 5) {
+		if (word.length() == 4 || word.length() == 5) {
 			smallWords->append(word);
 		}
 		if (word.length() == 6 || word.length() == 7) {
@@ -88,6 +90,15 @@ bool Logic::createLists() {
 		}
 	}
 	return true;
+}
+
+//scrambles words in the arrays
+std::string Logic::scrambler(std::string word) {
+
+	std::string newWord = word;
+	std::shuffle(newWord.begin(), newWord.end(), std::default_random_engine());
+
+	return newWord;
 }
 
 // A pointer to a function that prompts the user for input
