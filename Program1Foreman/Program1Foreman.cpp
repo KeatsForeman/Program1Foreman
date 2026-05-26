@@ -23,12 +23,13 @@ int main(int argc, char* argv[]) {
 
 	game.introduction();
 	game.createLists();
-	game.playGame(game);
 
 	ALLEGRO_THREAD* create1 = NULL, * create2 = NULL; //used for return value from thread creation
 
-	create1 = al_create_thread(input, NULL);
+	create1 = al_create_thread(input, &game);
 	create2 = al_create_thread(timer, NULL);
+
+	
 
 	while (!finished && !timeOut)
 	{
@@ -50,9 +51,10 @@ int main(int argc, char* argv[]) {
 
 	}
 	if (finished)
-		cout << "\n\tUser entered input and that ended the program\n";
+		game.end();
 	else
-		cout << "\n\tTime ran out and that ended the program1\n";
+		cout << "\n\tTime ran out\n";
+		game.end();
 	system("pause");
 	return 0;
 }
@@ -70,7 +72,10 @@ void Logic::introduction() {
 	printf("Welcome to scramble!\nYou will be shown a scambled word, you will have 30 seconds to \nunscamble the word, but you have unlimited chances.");
 }
 void Logic::end() {
-	printf("game over");
+	std::string score = to_string(numCorrect);
+	printf("game over\nYour score was ");
+	printf(score.c_str());
+	printf(" out of 5.\n");
 }
 
 //reads in file and puts into lists
@@ -114,6 +119,7 @@ bool Logic::playGame(Logic game) {
 			if (ans.compare(temp) == 0) {
 				std::cout << "good\n";
 				roundDone = true;
+				numCorrect += 1;
 			}
 		}
 		roundDone = false;
@@ -128,23 +134,23 @@ bool Logic::playGame(Logic game) {
 			if (ans.compare(temp) == 0) {
 				std::cout << "good\n";
 				roundDone = true;
+				numCorrect += 1;
 			}
 		}
 		roundDone = false;
 	}
-	for (int i = 0; i < 2; i++) {
-		std::string temp = largeWords[0];
-		std::cout << "The word to guess is: " << scrambler(largeWords[0]) << std::endl;
-		std::string ans;
-		while (!roundDone) {
-			std::cout << "guess ";
-			std::cin >> ans;
-			if (ans.compare(temp) == 0) {
-				std::cout << "good\n";
-				roundDone = true;
-			}
+	std::string temp = largeWords[0];
+	std::cout << "The word to guess is: " << scrambler(largeWords[0]) << std::endl;
+	std::string ans;
+	while (!roundDone) {
+		std::cout << "guess ";
+		std::cin >> ans;
+		if (ans.compare(temp) == 0) {
+			std::cout << "good\n";
+			roundDone = true;
+			numCorrect += 1;
+			finished = true;
 		}
-		roundDone = false;
 	}
 	return true;
 }
@@ -161,10 +167,8 @@ std::string Logic::scrambler(std::string word) {
 // A pointer to a function that prompts the user for input
 void* input(ALLEGRO_THREAD* ptr, void* arg)
 {
-	finished = false;
-	cout << "what's yer guess?\n";
-	cin >> finished;
-	finished = true;
+	Logic* game = (Logic*)arg;
+	game->playGame(*game);
 	return NULL;
 }
 // A pointer to a function that starts the timer and checks the change in
