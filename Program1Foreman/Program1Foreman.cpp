@@ -52,9 +52,10 @@ int main(int argc, char* argv[]) {
 	}
 	if (finished)
 		game.end();
-	else
+	else {
 		cout << "\n\tTime ran out\n";
 		game.end();
+		}	
 	system("pause");
 	return 0;
 }
@@ -108,10 +109,14 @@ bool Logic::createLists() {
 //plays the game
 bool Logic::playGame(Logic game) {
 	bool roundDone = false;
+	int randNum;
+	std::string temp;
+	std::srand(time(0));
 	printf("GET READY FOR LEVEL 1\n");
 	for (int i = 0; i < 2; i++) {
-		std::string temp = smallWords[0];
-		std::cout << "The word to guess is: " << scrambler(smallWords[0]) << std::endl;
+		randNum = rand() % smallWordLength - 1;
+		temp = smallWords[randNum];
+		std::cout << "The word to guess is: " << scrambler(smallWords[randNum]) << std::endl;
 		std::string ans;
 		while (!roundDone) {
 			std::cout << "guess ";
@@ -125,8 +130,9 @@ bool Logic::playGame(Logic game) {
 		roundDone = false;
 	}
 	for (int i = 0; i < 2; i++) {
-		std::string temp = mediumWords[0];
-		std::cout << "The word to guess is: " << scrambler(mediumWords[0]) << std::endl;
+		randNum = rand() % smallWordLength - 1;
+		temp = mediumWords[randNum];
+		std::cout << "The word to guess is: " << scrambler(mediumWords[randNum]) << std::endl;
 		std::string ans;
 		while (!roundDone) {
 			std::cout << "guess ";
@@ -139,8 +145,9 @@ bool Logic::playGame(Logic game) {
 		}
 		roundDone = false;
 	}
-	std::string temp = largeWords[0];
-	std::cout << "The word to guess is: " << scrambler(largeWords[0]) << std::endl;
+	randNum = rand() % largeWordLength - 1;
+	temp = largeWords[randNum];
+	std::cout << "The word to guess is: " << scrambler(largeWords[randNum]) << std::endl;
 	std::string ans;
 	while (!roundDone) {
 		std::cout << "guess ";
