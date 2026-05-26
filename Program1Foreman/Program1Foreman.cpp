@@ -50,10 +50,12 @@ int main(int argc, char* argv[]) {
 
 
 	}
+	//when thread that is running game finishes
 	if (finished) {
 		cout << "You WON! :D\n";
 		game.end();
 	}
+	//when timer ends
 	else {
 		cout << "\n\tTime ran out\n";
 		game.end();
@@ -61,6 +63,10 @@ int main(int argc, char* argv[]) {
 	system("pause");
 	return 0;
 }
+
+//One line describing function
+//one line describing param
+// one line describing return
 
 //constructor
 Logic::Logic() {
@@ -74,6 +80,8 @@ Logic::Logic() {
 void Logic::introduction() {
 	printf("Welcome to scramble!\nYou will be shown a scambled word, you will have 60 seconds to \nunscamble the word, but you have unlimited chances.");
 }
+
+//prints out the result of the game, different output based on score
 void Logic::end() {
 	std::string score = to_string(numCorrect);
 	cout << "game over\nYour score was " << score.c_str() << " out of 5. ";
@@ -95,16 +103,19 @@ void Logic::end() {
 }
 
 //reads in file and puts into lists
+//outputs true if successful, false if not
 bool Logic::createLists() {
 	std::string word;
 	
+	//get file
 	std::ifstream file("dictionary.txt");
-
+	//check if it worked
 	if (!file) {
 		return false;
 	}
-
+	//for each word in the file
 	while (file >> word) {
+		//check lengths and insert into appropriate array
 		if (word.length() == 4 || word.length() == 5) {
 			smallWords[smallWordLength] = word;
 			smallWordLength += 1;
@@ -121,52 +132,67 @@ bool Logic::createLists() {
 	return true;
 }
 
-//plays the game
+//runs the game by pulling random words from arrays and scrambling them, then asking the user to guess
+//takes Logic instance as parameter
+//returns true if the player wins
 bool Logic::playGame(Logic game) {
 	bool roundDone = false;
 	int randNum;
 	std::string temp;
 	std::srand(time(0));
 	cout << "\nGET READY FOR LEVEL 1\n";
+	//two small words in this loop
 	for (int i = 0; i < 2; i++) {
 		if (i == 1) {
 			cout << "GET READY FOR LEVEL 2\n";
 		}
+		//get a random number
 		randNum = rand() % smallWordLength - 1;
 		temp = smallWords[randNum];
+		//call scrambler on the word
 		std::cout << "The word to guess is: " << scrambler(smallWords[randNum]) << std::endl;
 		std::string ans;
+		//while the user has not guessed
 		while (!roundDone) {
 			std::cout << "guess ";
 			std::cin >> ans;
 			if (ans.compare(temp) == 0) {
 				std::cout << "good\n";
+				//exit while loop
 				roundDone = true;
+				//increment score
 				numCorrect += 1;
 			}
 		}
 		roundDone = false;
 	}
 	cout << "GET READY FOR LEVEL 3\n";
+	//two medium words in this loop
 	for (int i = 0; i < 2; i++) {
 		if (i == 1) {
 			cout << "GET READY FOR LEVEL 4\n";
 		}
+		//get a random number
 		randNum = rand() % mediumWordLength - 1;
 		temp = mediumWords[randNum];
+		//call scrambler on the word
 		std::cout << "The word to guess is: " << scrambler(mediumWords[randNum]) << std::endl;
 		std::string ans;
+		//while the user has not guessed
 		while (!roundDone) {
 			std::cout << "guess ";
 			std::cin >> ans;
 			if (ans.compare(temp) == 0) {
 				std::cout << "good\n";
+				//exit while loop
 				roundDone = true;
+				//increment score
 				numCorrect += 1;
 			}
 		}
 		roundDone = false;
 	}
+	//once for large words
 	cout << "GET READY FOR LEVEL 5\n";
 	randNum = rand() % largeWordLength - 1;
 	temp = largeWords[randNum];
@@ -185,7 +211,9 @@ bool Logic::playGame(Logic game) {
 	return true;
 }
 
-//scrambles words in the arrays
+//scrambles each word in the arrays
+//takes a string as a parameter
+//return the string scrambled
 std::string Logic::scrambler(std::string word) {
 
 	std::string newWord = word;
