@@ -5,6 +5,7 @@
 #include <fstream>
 #include <algorithm>
 #include <random>
+#include <cstring>
 
 
 using namespace std;
@@ -22,6 +23,7 @@ int main(int argc, char* argv[]) {
 
 	game.introduction();
 	game.createLists();
+	game.playGame(game);
 
 	ALLEGRO_THREAD* create1 = NULL, * create2 = NULL; //used for return value from thread creation
 
@@ -65,7 +67,10 @@ Logic::Logic() {
 
 //prints out game instructions
 void Logic::introduction() {
-	printf("GUess these darn words please\n");
+	printf("Welcome to scramble!\nYou will be shown a scambled word, you will have 30 seconds to \nunscamble the word, but you have unlimited chances.");
+}
+void Logic::end() {
+	printf("game over");
 }
 
 //reads in file and puts into lists
@@ -80,17 +85,66 @@ bool Logic::createLists() {
 
 	while (file >> word) {
 		if (word.length() == 4 || word.length() == 5) {
-			smallWords->append(word);
+			smallWords[smallWordLength] = word;
 			smallWordLength += 1;
 		}
 		if (word.length() == 6 || word.length() == 7) {
-			mediumWords->append(word);
+			mediumWords[mediumWordLength] = word;
 			mediumWordLength += 1;
 		}
 		if (word.length() >= 8) {
-			largeWords->append(word);
+			largeWords[largeWordLength] = word;
 			largeWordLength += 1;
 		}
+	}
+	return true;
+}
+
+//plays the game
+bool Logic::playGame(Logic game) {
+	bool roundDone = false;
+	printf("GET READY FOR LEVEL 1\n");
+	for (int i = 0; i < 2; i++) {
+		std::string temp = smallWords[0];
+		std::cout << "The word to guess is: " << scrambler(smallWords[0]) << std::endl;
+		std::string ans;
+		while (!roundDone) {
+			std::cout << "guess ";
+			std::cin >> ans;
+			if (ans.compare(temp) == 0) {
+				std::cout << "good\n";
+				roundDone = true;
+			}
+		}
+		roundDone = false;
+	}
+	for (int i = 0; i < 2; i++) {
+		std::string temp = mediumWords[0];
+		std::cout << "The word to guess is: " << scrambler(mediumWords[0]) << std::endl;
+		std::string ans;
+		while (!roundDone) {
+			std::cout << "guess ";
+			std::cin >> ans;
+			if (ans.compare(temp) == 0) {
+				std::cout << "good\n";
+				roundDone = true;
+			}
+		}
+		roundDone = false;
+	}
+	for (int i = 0; i < 2; i++) {
+		std::string temp = largeWords[0];
+		std::cout << "The word to guess is: " << scrambler(largeWords[0]) << std::endl;
+		std::string ans;
+		while (!roundDone) {
+			std::cout << "guess ";
+			std::cin >> ans;
+			if (ans.compare(temp) == 0) {
+				std::cout << "good\n";
+				roundDone = true;
+			}
+		}
+		roundDone = false;
 	}
 	return true;
 }
@@ -108,7 +162,7 @@ std::string Logic::scrambler(std::string word) {
 void* input(ALLEGRO_THREAD* ptr, void* arg)
 {
 	finished = false;
-	cout << "Asking for user Input?";
+	cout << "what's yer guess?\n";
 	cin >> finished;
 	finished = true;
 	return NULL;
